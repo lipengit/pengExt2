@@ -1,0 +1,41 @@
+######    EXT2 (pengExt2)    ######
+using sudo insmod pengExt2.ko to load this FS module. 
+using sudo rmmod pengExt2.ko to unload. 
+Check the loaded modules in kernel: lsmod | head -6
+
+===How to format the drive to pengExt2 FS format===
+sudo mkfs.ext2 -b 4096 /dev/nvme1n1 64
+This will create 64 4KiB blocks with 32 inodes (with lost_found folder created.)
+
+Initially, the defaul block size in the Super Block is 1024.
+The super block index is 1 with an offset 0. 
+
+After reading the block size saved in the disk, which is 4096. 
+The FS reset the super block to be 0 with an offset 1024. 
+ 
+Max file size is 2TiB. 
+inode size is 128 Bytes. 
+First non-reserved inode index is 11. 
+Root inode index is 2. 
+
+(LBA sector size is 512B)
+LBA 0-1: Boot block (first 1024 bytes, LBA0-1)
+LBA 2-7: Super block (second 1024 bytes, LBA2-7) 
+
+LBA 8-15: Group descriptor. (block index 1 based on 4096 block size)  --- Data structure ext2_group_desc, which records 
+    the block # of data block bitmap;
+    the block # of inode bitmap;
+    the block # of inode table; 
+
+LBA 16-23: Data block bitmap (to be confirmed)
+LBA 24-31: inode bitmap (to be confirmed)
+LBA 32-39: inode table (Starting from Block 4)
+LBA 40-: data blocks (Starting from Block 5)
+
+===How to mount the drive to pengExt2 FS===
+sudo mount -t pengExt2 /dev/nvme1n1 /home/peng/pengExt2Drive/
+
+
+######    AUFS     ######
+===How to mount a drive in a physical device===
+sudo mount -t aufs /dev/nvme1n1 /home/peng/aufsDrive/
