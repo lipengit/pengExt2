@@ -1253,18 +1253,18 @@ static int ext2_sync_fs(struct super_block *sb, int wait)
 	struct ext2_sb_info *sbi = EXT2_SB(sb);
 	struct ext2_super_block *es = EXT2_SB(sb)->s_es;
         
-        pr_debug ("ext2_sync_fs: super block, inodes count %d.\n", es->s_inodes_count);
-        pr_debug ("ext2_sync_fs: super block, blocks count %d.\n", es->s_blocks_count);
-        pr_debug ("ext2_sync_fs: super block, reserved blocks count %d.\n", es->s_r_blocks_count);
-        pr_debug ("ext2_sync_fs: super block, free blocks count %d.\n", es->s_free_blocks_count);
-        pr_debug ("ext2_sync_fs: super block, free inode count %d.\n", es->s_free_inodes_count);
-        pr_debug ("ext2_sync_fs: super block, first data block %d.\n", es->s_first_data_block);
-        pr_debug ("ext2_sync_fs: super block, log block size %d.\n", es->s_log_block_size);
-	pr_debug ("ext2_sync_fs: super block, blocks per group %d.\n", es->s_blocks_per_group);
-        pr_debug ("ext2_sync_fs: super block, inodes per group %d.\n", es->s_inodes_per_group);
-	pr_debug ("ext2_sync_fs: super block, first non-reserved inode %d.\n", es->s_first_ino);
-	pr_debug ("ext2_sync_fs: super block, inode size %d.\n", es->s_inode_size);
-        pr_debug ("ext2_sync_fs: super block, block group # of this superblock %d.\n", es->s_block_group_nr);        
+        //pr_debug ("ext2_sync_fs: super block, inodes count %d.\n", es->s_inodes_count);
+        //pr_debug ("ext2_sync_fs: super block, blocks count %d.\n", es->s_blocks_count);
+        //pr_debug ("ext2_sync_fs: super block, reserved blocks count %d.\n", es->s_r_blocks_count);
+        //pr_debug ("ext2_sync_fs: super block, free blocks count %d.\n", es->s_free_blocks_count);
+        //pr_debug ("ext2_sync_fs: super block, free inode count %d.\n", es->s_free_inodes_count);
+        //pr_debug ("ext2_sync_fs: super block, first data block %d.\n", es->s_first_data_block);
+        //pr_debug ("ext2_sync_fs: super block, log block size %d.\n", es->s_log_block_size);
+	//pr_debug ("ext2_sync_fs: super block, blocks per group %d.\n", es->s_blocks_per_group);
+        //pr_debug ("ext2_sync_fs: super block, inodes per group %d.\n", es->s_inodes_per_group);
+	//pr_debug ("ext2_sync_fs: super block, first non-reserved inode %d.\n", es->s_first_ino);
+	//pr_debug ("ext2_sync_fs: super block, inode size %d.\n", es->s_inode_size);
+        //pr_debug ("ext2_sync_fs: super block, block group # of this superblock %d.\n", es->s_block_group_nr);        
 
 	/*
 	 * Write quota structures to quota file, sync_blockdev() will write

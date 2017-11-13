@@ -1365,13 +1365,13 @@ static struct ext2_inode *ext2_get_inode(struct super_block *sb, ino_t ino,
 	block = le32_to_cpu(gdp->bg_inode_table) +
 		(offset >> EXT2_BLOCK_SIZE_BITS(sb));
                 
-        pr_debug("ext2_get_inode --- block # of the data block bitmap %d.\n", le32_to_cpu(gdp->bg_block_bitmap));
-        pr_debug("ext2_get_inode --- block # of the inode bitmap %d.\n", le32_to_cpu(gdp->bg_inode_bitmap));
-        pr_debug("ext2_get_inode --- block # of the inode_table %d.\n", le32_to_cpu(gdp->bg_inode_table));
-        pr_debug("ext2_get_inode --- free block count of this group %d.\n", le32_to_cpu(gdp->bg_free_blocks_count));
-        pr_debug("ext2_get_inode --- free inode count of this group %d.\n", le32_to_cpu(gdp->bg_free_inodes_count));
-        pr_debug("ext2_get_inode --- ext2 block size bits %d.\n", EXT2_BLOCK_SIZE_BITS(sb));
-        pr_debug("ext2_get_inode --- block %d, offset %d.\n", block, offset);
+        //pr_debug("ext2_get_inode --- block # of the data block bitmap %d.\n", le32_to_cpu(gdp->bg_block_bitmap));
+        //pr_debug("ext2_get_inode --- block # of the inode bitmap %d.\n", le32_to_cpu(gdp->bg_inode_bitmap));
+        //pr_debug("ext2_get_inode --- block # of the inode_table %d.\n", le32_to_cpu(gdp->bg_inode_table));
+        //pr_debug("ext2_get_inode --- free block count of this group %d.\n", le32_to_cpu(gdp->bg_free_blocks_count));
+        //pr_debug("ext2_get_inode --- free inode count of this group %d.\n", le32_to_cpu(gdp->bg_free_inodes_count));
+        //pr_debug("ext2_get_inode --- ext2 block size bits %d.\n", EXT2_BLOCK_SIZE_BITS(sb));
+        //pr_debug("ext2_get_inode --- block %d, offset %d.\n", block, offset);
         
 	if (!(bh = sb_bread(sb, block)))
 		goto Eio;
@@ -1457,16 +1457,16 @@ struct inode *ext2_iget (struct super_block *sb, unsigned long ino)
  		goto bad_inode;
 	}
         
-        pr_debug("ext2_iget raw inode --- imode %d\n", raw_inode->i_mode);
-        pr_debug("ext2_iget raw inode --- uid %d\n", raw_inode->i_uid);
-        pr_debug("ext2_iget raw inode --- size in bytes %d\n", raw_inode->i_size);
-	pr_debug("ext2_iget raw inode --- access time %d\n", raw_inode->i_atime);
-        pr_debug("ext2_iget raw inode --- creation time %d\n", raw_inode->i_ctime);
-        pr_debug("ext2_iget raw inode --- modification time %d\n", raw_inode->i_mtime);
-        pr_debug("ext2_iget raw inode --- deletion time %d\n", raw_inode->i_dtime);
-        pr_debug("ext2_iget raw inode --- group ID %d\n", raw_inode->i_gid);
-	pr_debug("ext2_iget raw inode --- block count %d\n", raw_inode->i_blocks);
-        pr_debug("ext2_iget raw inode --- first data block # of this inode %d\n", raw_inode->i_block[0]);
+        //pr_debug("ext2_iget raw inode --- imode %d\n", raw_inode->i_mode);
+        //pr_debug("ext2_iget raw inode --- uid %d\n", raw_inode->i_uid);
+        //pr_debug("ext2_iget raw inode --- size in bytes %d\n", raw_inode->i_size);
+	//pr_debug("ext2_iget raw inode --- access time %d\n", raw_inode->i_atime);
+        //pr_debug("ext2_iget raw inode --- creation time %d\n", raw_inode->i_ctime);
+        //pr_debug("ext2_iget raw inode --- modification time %d\n", raw_inode->i_mtime);
+        //pr_debug("ext2_iget raw inode --- deletion time %d\n", raw_inode->i_dtime);
+        //pr_debug("ext2_iget raw inode --- group ID %d\n", raw_inode->i_gid);
+	//pr_debug("ext2_iget raw inode --- block count %d\n", raw_inode->i_blocks);
+        //pr_debug("ext2_iget raw inode --- first data block # of this inode %d\n", raw_inode->i_block[0]);
 
 	inode->i_mode = le16_to_cpu(raw_inode->i_mode);
 	i_uid = (uid_t)le16_to_cpu(raw_inode->i_uid_low);

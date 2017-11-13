@@ -331,6 +331,7 @@ ext2_readdir(struct file *file, struct dir_context *ctx)
 		}
 		de = (ext2_dirent *)(kaddr+offset);
 		limit = kaddr + ext2_last_byte(inode, n) - EXT2_DIR_REC_LEN(1);
+                
 		for ( ;(char*)de <= limit; de = ext2_next_entry(de)) {
 			if (de->rec_len == 0) {
 				ext2_error(sb, __func__,
@@ -338,22 +339,30 @@ ext2_readdir(struct file *file, struct dir_context *ctx)
 				ext2_put_page(page);
 				return -EIO;
 			}
+                        
 			if (de->inode) {
                                 //pr_debug("ext2_dirent current inode %d, file type %d, name length %d, rec length %d, name %s.\n", de->inode, de->file_type, de->name_len, de->rec_len, de->name);
 				unsigned char d_type = DT_UNKNOWN;
 
 				if (types && de->file_type < EXT2_FT_MAX)
 					d_type = types[de->file_type];
+                                
+                                //dir_emit(ctx, de->name, de->name_len, le32_to_cpu(de->inode), d_type);
 
+                                
 				if (!dir_emit(ctx, de->name, de->name_len,
 						le32_to_cpu(de->inode),
 						d_type)) {
+                                        pr_debug("ext2_iget --- put page.\n");
 					ext2_put_page(page);
 					return 0;
 				}
+                                
 			}
+                        
 			ctx->pos += ext2_rec_len_from_disk(de->rec_len);
 		}
+                
 		ext2_put_page(page);
 	}
 	return 0;
