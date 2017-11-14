@@ -285,7 +285,7 @@ static inline void ext2_set_de_type(ext2_dirent *de, struct inode *inode)
 static int
 ext2_readdir(struct file *file, struct dir_context *ctx)
 {
-        pr_debug("ext2_readdir is called.\n");		
+        pr_debug("ext2_readdir is called, position %d.\n", (unsigned int)ctx->pos);		
         loff_t pos = ctx->pos;
         //pr_debug("ext2_readdir pos %d.\n", (uint32_t) pos);		
 	struct inode *inode = file_inode(file);
@@ -469,13 +469,15 @@ ino_t ext2_inode_by_name(struct inode *dir, const struct qstr *child)
 
 static int ext2_prepare_chunk(struct page *page, loff_t pos, unsigned len)
 {
-	return __block_write_begin(page, pos, len, ext2_get_block);
+    pr_debug("ext2_prepare_chunk is called.\n");	
+    return __block_write_begin(page, pos, len, ext2_get_block);
 }
 
 /* Releases the page */
 void ext2_set_link(struct inode *dir, struct ext2_dir_entry_2 *de,
 		   struct page *page, struct inode *inode, int update_times)
 {
+    pr_debug("ext2_set_link is called.\n");
 	loff_t pos = page_offset(page) +
 			(char *) de - (char *) page_address(page);
 	unsigned len = ext2_rec_len_from_disk(de->rec_len);
@@ -499,6 +501,7 @@ void ext2_set_link(struct inode *dir, struct ext2_dir_entry_2 *de,
  */
 int ext2_add_link (struct dentry *dentry, struct inode *inode)
 {
+    pr_debug("ext2_add_link is called.\n");
 	struct inode *dir = d_inode(dentry->d_parent);
 	const char *name = dentry->d_name.name;
 	int namelen = dentry->d_name.len;
@@ -598,6 +601,7 @@ out_unlock:
  */
 int ext2_delete_entry (struct ext2_dir_entry_2 * dir, struct page * page )
 {
+    pr_debug("ext2_delete_entry is called.\n");
 	struct inode *inode = page->mapping->host;
 	char *kaddr = page_address(page);
 	unsigned from = ((char*)dir - kaddr) & ~(ext2_chunk_size(inode)-1);
@@ -641,6 +645,7 @@ out:
  */
 int ext2_make_empty(struct inode *inode, struct inode *parent)
 {
+    pr_debug("ext2_make_empty is called.\n");
 	struct page *page = grab_cache_page(inode->i_mapping, 0);
 	unsigned chunk_size = ext2_chunk_size(inode);
 	struct ext2_dir_entry_2 * de;

@@ -780,7 +780,7 @@ cleanup:
 int ext2_get_block(struct inode *inode, sector_t iblock,
 		struct buffer_head *bh_result, int create)
 {
-        pr_debug("ext2_get_block is called.\n");	
+        pr_debug("ext2_get_block is called for block %d.\n", iblock);	
 	unsigned max_blocks = bh_result->b_size >> inode->i_blkbits;
 	bool new = false, boundary = false;
 	u32 bno;
@@ -862,6 +862,7 @@ struct iomap_ops ext2_iomap_ops;
 int ext2_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
 		u64 start, u64 len)
 {
+    pr_debug ("ext2_filemap is called. \n"); 
 	return generic_block_fiemap(inode, fieinfo, start, len,
 				    ext2_get_block);
 }
@@ -1298,7 +1299,7 @@ static void ext2_truncate_blocks(struct inode *inode, loff_t offset)
 static int ext2_setsize(struct inode *inode, loff_t newsize)
 {
 	int error;
-
+        pr_debug("ext2_setsize is called. \n");
 	if (!(S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
 	    S_ISLNK(inode->i_mode)))
 		return -EINVAL;

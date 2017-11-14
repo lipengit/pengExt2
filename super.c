@@ -1499,6 +1499,7 @@ static struct dentry *ext2_mount(struct file_system_type *fs_type,
 static ssize_t ext2_quota_read(struct super_block *sb, int type, char *data,
 			       size_t len, loff_t off)
 {
+        pr_debug("ext2_quota_read is called.\n");
 	struct inode *inode = sb_dqopt(sb)->files[type];
 	sector_t blk = off >> EXT2_BLOCK_SIZE_BITS(sb);
 	int err = 0;
@@ -1544,6 +1545,7 @@ static ssize_t ext2_quota_read(struct super_block *sb, int type, char *data,
 static ssize_t ext2_quota_write(struct super_block *sb, int type,
 				const char *data, size_t len, loff_t off)
 {
+        pr_debug("ext2_quota_write is called.\n");
 	struct inode *inode = sb_dqopt(sb)->files[type];
 	sector_t blk = off >> EXT2_BLOCK_SIZE_BITS(sb);
 	int err = 0;
