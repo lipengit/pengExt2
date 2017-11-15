@@ -1443,7 +1443,7 @@ struct inode *ext2_iget (struct super_block *sb, unsigned long ino)
 	uid_t i_uid;
 	gid_t i_gid;
         pr_debug("ext2_iget is called for inode %d.\n", ino);
-	inode = iget_locked(sb, ino);
+	inode = iget_locked(sb, ino); // This function is possibly calling alloc_inode (ext2_alloc_inode). 
 	if (!inode)
 		return ERR_PTR(-ENOMEM);
 	if (!(inode->i_state & I_NEW))

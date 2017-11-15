@@ -60,14 +60,14 @@ static struct dentry *ext2_lookup(struct inode * dir, struct dentry *dentry, uns
 	struct inode * inode;
 	ino_t ino;
         
-	pr_debug("ext2_lookup is called.\n");	
+	//pr_debug("ext2_lookup is called.\n");	
 	if (dentry->d_name.len > EXT2_NAME_LEN)
 		return ERR_PTR(-ENAMETOOLONG);
 
 	ino = ext2_inode_by_name(dir, &dentry->d_name);
 	inode = NULL;
 	if (ino) {
-                pr_debug("ext2_lookup is called for inode %d.\n", ino);	
+                pr_debug("ext2_lookup is calling ext2_iget for inode %d.\n", ino);	
 		inode = ext2_iget(dir->i_sb, ino);
 		if (inode == ERR_PTR(-ESTALE)) {
 			ext2_error(dir->i_sb, __func__,

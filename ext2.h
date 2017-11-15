@@ -731,6 +731,7 @@ struct ext2_inode_info {
 
 static inline struct ext2_inode_info *EXT2_I(struct inode *inode)
 {
+        //pr_debug("EXT2_I is called.\n");
 	return container_of(inode, struct ext2_inode_info, vfs_inode);
 }
 

@@ -164,7 +164,7 @@ static struct kmem_cache * ext2_inode_cachep;
 static struct inode *ext2_alloc_inode(struct super_block *sb)
 {
 	struct ext2_inode_info *ei;
-        pr_debug("ext2_alloc_inode is called.");       
+        // pr_debug("ext2_alloc_inode is called.");       
 	ei = kmem_cache_alloc(ext2_inode_cachep, GFP_KERNEL);
 	if (!ei)
 		return NULL;
