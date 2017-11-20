@@ -1372,7 +1372,7 @@ static struct ext2_inode *ext2_get_inode(struct super_block *sb, ino_t ino,
         //pr_debug("ext2_get_inode --- free block count of this group %d.\n", le32_to_cpu(gdp->bg_free_blocks_count));
         //pr_debug("ext2_get_inode --- free inode count of this group %d.\n", le32_to_cpu(gdp->bg_free_inodes_count));
         //pr_debug("ext2_get_inode --- ext2 block size bits %d.\n", EXT2_BLOCK_SIZE_BITS(sb));
-        //pr_debug("ext2_get_inode --- block %d, offset %d.\n", block, offset);
+        pr_debug("ext2_get_inode --- block %d, offset %d.\n", block, offset);
         
 	if (!(bh = sb_bread(sb, block)))
 		goto Eio;

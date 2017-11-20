@@ -48,11 +48,12 @@ read_inode_bitmap(struct super_block * sb, unsigned long block_group)
 	struct ext2_group_desc *desc;
 	struct buffer_head *bh = NULL;
 
-        pr_debug("read_inode_bitmap is called.\n");	
+        //pr_debug("read_inode_bitmap is called.\n");	
 	desc = ext2_get_group_desc(sb, block_group, NULL);
 	if (!desc)
 		goto error_out;
 
+        pr_debug("read_inode_bitmap from block %d.\n", le32_to_cpu(desc->bg_inode_bitmap));
 	bh = sb_bread(sb, le32_to_cpu(desc->bg_inode_bitmap));
 	if (!bh)
 		ext2_error(sb, "read_inode_bitmap",
@@ -449,7 +450,7 @@ struct inode *ext2_new_inode(struct inode *dir, umode_t mode,
 	struct ext2_sb_info *sbi;
 	int err;
 
-        pr_debug("ext2_new_inode is called.\n");	
+        // pr_debug("ext2_new_inode is called.\n");	
 	sb = dir->i_sb;
 	inode = new_inode(sb);
 	if (!inode)
@@ -471,6 +472,7 @@ struct inode *ext2_new_inode(struct inode *dir, umode_t mode,
 		goto fail;
 	}
 
+        //pr_debug("ext2_new_inode --- group %d, sbi groups count %d.\n", group, sbi->s_groups_count);	
 	for (i = 0; i < sbi->s_groups_count; i++) {
 		gdp = ext2_get_group_desc(sb, group, &bh2);
 		if (!gdp) {
@@ -489,6 +491,7 @@ struct inode *ext2_new_inode(struct inode *dir, umode_t mode,
 repeat_in_this_group:
 		ino = ext2_find_next_zero_bit((unsigned long *)bitmap_bh->b_data,
 					      EXT2_INODES_PER_GROUP(sb), ino);
+                //pr_debug("ext2_new_inode --- found a new inode %d.\n", ino);
 		if (ino >= EXT2_INODES_PER_GROUP(sb)) {
 			/*
 			 * Rare race: find_group_xx() decided that there were
@@ -539,6 +542,7 @@ got:
 	}
 
 	percpu_counter_add(&sbi->s_freeinodes_counter, -1);
+        //pr_debug ("ext2_new_inode --- free inodes %d.\n", &sbi->s_freeinodes_counter);
 	if (S_ISDIR(mode))
 		percpu_counter_inc(&sbi->s_dirs_counter);
 

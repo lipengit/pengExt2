@@ -246,7 +246,7 @@ static int ext2_mkdir(struct inode * dir, struct dentry * dentry, umode_t mode)
 	struct inode * inode;
 	int err;
 
-        pr_debug("ext2_mkdir is called.\n");	
+        pr_debug("ext2_mkdir is called, dir inode %d.\n", dir->i_ino);	
 	err = dquot_initialize(dir);
 	if (err)
 		return err;
