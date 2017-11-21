@@ -363,7 +363,7 @@ ext2_blks_to_allocate(Indirect * branch, int k, unsigned long blks,
 		int blocks_to_boundary)
 {
 	unsigned long count = 0;
-        pr_debug("ext2_blks_to_allocate is called.\n");	
+        //pr_debug("ext2_blks_to_allocate is called.\n");	
 	/*
 	 * Simple case, [t,d]Indirect block(s) has not allocated yet
 	 * then it's clear blocks on that path have not allocated
@@ -405,7 +405,7 @@ static int ext2_alloc_blocks(struct inode *inode,
 	ext2_fsblk_t current_block = 0;
 	int ret = 0;
 
-        pr_debug("ext2_alloc_blocks is called.\n");
+        //pr_debug("ext2_alloc_blocks is called.\n");
 	/*
 	 * Here we try to allocate the requested multiple blocks at once,
 	 * on a best-effort basis.
@@ -478,7 +478,7 @@ static int ext2_alloc_branch(struct inode *inode,
 			int indirect_blks, int *blks, ext2_fsblk_t goal,
 			int *offsets, Indirect *branch)
 {
-        pr_debug("ext2_alloc_branch is called.\n");
+        //pr_debug("ext2_alloc_branch is called.\n");
 	int blocksize = inode->i_sb->s_blocksize;
 	int i, n = 0;
 	int err = 0;
@@ -564,7 +564,7 @@ static void ext2_splice_branch(struct inode *inode,
 	struct ext2_block_alloc_info *block_i;
 	ext2_fsblk_t current_block;
 
-        pr_debug("ext2_splice_branch is called.\n");
+        //pr_debug("ext2_splice_branch is called.\n");
 	block_i = EXT2_I(inode)->i_block_alloc_info;
 
 	/* XXX LOCKING probably should have i_meta_lock ?*/
@@ -638,10 +638,11 @@ static int ext2_get_blocks(struct inode *inode,
 	int count = 0;
 	ext2_fsblk_t first_block = 0;
 
-        pr_debug("ext2_get_blocks is called.\n");
+        //pr_debug("ext2_get_blocks is called.\n");
 	BUG_ON(maxblocks == 0);
 
 	depth = ext2_block_to_path(inode,iblock,offsets,&blocks_to_boundary);
+        //pr_debug("ext2_get_blocks --- depth %d.\n", depth);
 
 	if (depth == 0)
 		return -EIO;
@@ -780,7 +781,7 @@ cleanup:
 int ext2_get_block(struct inode *inode, sector_t iblock,
 		struct buffer_head *bh_result, int create)
 {
-        pr_debug("ext2_get_block is called for block %d.\n", iblock);	
+        //pr_debug("ext2_get_block is called for inode %d, block %d.\n", inode->i_ino, iblock);	
 	unsigned max_blocks = bh_result->b_size >> inode->i_blkbits;
 	bool new = false, boundary = false;
 	u32 bno;
@@ -790,7 +791,8 @@ int ext2_get_block(struct inode *inode, sector_t iblock,
 			create);
 	if (ret <= 0)
 		return ret;
-
+        
+        pr_debug("ext2_get_blocks allocated block %d for inode %d.\n", bno, inode->i_ino);	
 	map_bh(bh_result, inode->i_sb, bno);
 	bh_result->b_size = (ret << inode->i_blkbits);
 	if (new)
@@ -973,7 +975,7 @@ ext2_writepages(struct address_space *mapping, struct writeback_control *wbc)
 						   wbc);
 	}
 #endif
-        pr_debug("ext2_writepages is called.\n");	
+        pr_debug("ext2_writepages is called for inode %d.\n", mapping->host->i_ino);	
 	return mpage_writepages(mapping, wbc, ext2_get_block);
 }
 
@@ -1354,7 +1356,7 @@ static struct ext2_inode *ext2_get_inode(struct super_block *sb, ino_t ino,
 		goto Einval;
 
 	block_group = (ino - 1) / EXT2_INODES_PER_GROUP(sb);
-        pr_debug("ext2_get_inode --- block group %d.\n", block_group);
+        //pr_debug("ext2_get_inode --- block group %d.\n", block_group);
 	gdp = ext2_get_group_desc(sb, block_group, NULL);
 	if (!gdp)
 		goto Egdp;
@@ -1372,7 +1374,7 @@ static struct ext2_inode *ext2_get_inode(struct super_block *sb, ino_t ino,
         //pr_debug("ext2_get_inode --- free block count of this group %d.\n", le32_to_cpu(gdp->bg_free_blocks_count));
         //pr_debug("ext2_get_inode --- free inode count of this group %d.\n", le32_to_cpu(gdp->bg_free_inodes_count));
         //pr_debug("ext2_get_inode --- ext2 block size bits %d.\n", EXT2_BLOCK_SIZE_BITS(sb));
-        pr_debug("ext2_get_inode --- block %d, offset %d.\n", block, offset);
+        //pr_debug("ext2_get_inode --- block %d, offset %d.\n", block, offset);
         
 	if (!(bh = sb_bread(sb, block)))
 		goto Eio;
@@ -1585,7 +1587,7 @@ bad_inode:
 
 static int __ext2_write_inode(struct inode *inode, int do_sync)
 {
-        pr_debug("__ext2_write_inode is called. ");
+        //pr_debug("__ext2_write_inode is called. ");
 	struct ext2_inode_info *ei = EXT2_I(inode);
 	struct super_block *sb = inode->i_sb;
 	ino_t ino = inode->i_ino;
@@ -1691,7 +1693,7 @@ static int __ext2_write_inode(struct inode *inode, int do_sync)
 
 int ext2_write_inode(struct inode *inode, struct writeback_control *wbc)
 {
-    pr_debug("ext2_write_inode is called.");	
+    pr_debug("ext2_write_inode is called for inode %d.\n", inode->i_ino);	
     return __ext2_write_inode(inode, wbc->sync_mode == WB_SYNC_ALL);
 }
 

@@ -278,7 +278,7 @@ static int find_group_orlov(struct super_block *sb, struct inode *parent)
 	int group = -1, i;
 	struct ext2_group_desc *desc;
 
-        pr_debug("find_group_orlov is called.\n");	
+        //pr_debug("find_group_orlov is called.\n");	
 	freei = percpu_counter_read_positive(&sbi->s_freeinodes_counter);
 	avefreei = freei / ngroups;
 	free_blocks = percpu_counter_read_positive(&sbi->s_freeblocks_counter);

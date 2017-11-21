@@ -469,7 +469,7 @@ ino_t ext2_inode_by_name(struct inode *dir, const struct qstr *child)
 
 static int ext2_prepare_chunk(struct page *page, loff_t pos, unsigned len)
 {
-    //pr_debug("ext2_prepare_chunk is called.\n");	
+    pr_debug("ext2_prepare_chunk is called.\n");	
     return __block_write_begin(page, pos, len, ext2_get_block);
 }
 
@@ -501,7 +501,7 @@ void ext2_set_link(struct inode *dir, struct ext2_dir_entry_2 *de,
  */
 int ext2_add_link (struct dentry *dentry, struct inode *inode)
 {
-    pr_debug("ext2_add_link is called.\n");
+        pr_debug("ext2_add_link is called.\n");
 	struct inode *dir = d_inode(dentry->d_parent);
 	const char *name = dentry->d_name.name;
 	int namelen = dentry->d_name.len;
@@ -648,7 +648,7 @@ int ext2_make_empty(struct inode *inode, struct inode *parent)
         pr_debug("ext2_make_empty is called for the new dir inode %d, and its parent dir inode %d.\n", inode->i_ino, parent->i_ino);
 	struct page *page = grab_cache_page(inode->i_mapping, 0);
 	unsigned chunk_size = ext2_chunk_size(inode);
-        pr_debug("ext2_make_empty --- chunk size %d.\n", chunk_size); 
+        //pr_debug("ext2_make_empty --- chunk size %d.\n", chunk_size); 
 	struct ext2_dir_entry_2 * de;
 	int err;
 	void *kaddr;
