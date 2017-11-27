@@ -90,7 +90,7 @@ static int ext2_commit_chunk(struct page *page, loff_t pos, unsigned len)
 	struct address_space *mapping = page->mapping;
 	struct inode *dir = mapping->host;
 	int err = 0;
-
+        pr_debug("ext2_commit_chunk is called for inode %d.\n", dir->i_ino);
 	dir->i_version++;
 	block_write_end(NULL, mapping, pos, len, len, page, NULL);
 
@@ -121,7 +121,9 @@ static bool ext2_check_page(struct page *page, int quiet)
 	unsigned limit = PAGE_SIZE;
 	ext2_dirent *p;
 	char *error;
-
+        
+        //pr_debug("ext2_check_page is called.\n");
+        
 	if ((dir->i_size >> PAGE_SHIFT) == page->index) {
 		limit = dir->i_size & ~PAGE_MASK;
 		if (limit & (chunk_size - 1))
@@ -601,8 +603,8 @@ out_unlock:
  */
 int ext2_delete_entry (struct ext2_dir_entry_2 * dir, struct page * page )
 {
-    pr_debug("ext2_delete_entry is called.\n");
 	struct inode *inode = page->mapping->host;
+        pr_debug("ext2_delete_entry is called for inode %d.\n", dir->inode);
 	char *kaddr = page_address(page);
 	unsigned from = ((char*)dir - kaddr) & ~(ext2_chunk_size(inode)-1);
 	unsigned to = ((char *)dir - kaddr) +

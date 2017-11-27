@@ -131,6 +131,7 @@ read_block_bitmap(struct super_block *sb, unsigned int block_group)
 	if (!desc)
 		return NULL;
 	bitmap_blk = le32_to_cpu(desc->bg_block_bitmap);
+        pr_debug("read_block_bitmap from block %d.\n", bitmap_blk);
 	bh = sb_getblk(sb, bitmap_blk);
 	if (unlikely(!bh)) {
 		ext2_error(sb, __func__,
@@ -498,6 +499,7 @@ void ext2_free_blocks (struct inode * inode, unsigned long block,
 	}
 
 	ext2_debug ("freeing block(s) %lu-%lu\n", block, block + count - 1);
+        pr_debug("ext2_free_block is called for inode %d starting from block %d for %d block(s).\n", inode->i_ino, block, count);
 
 do_more:
 	overflow = 0;

@@ -27,8 +27,8 @@ LBA 8-15: Group descriptor. (block index 1 based on 4096 block size)  --- Data s
     the block # of inode bitmap;
     the block # of inode table; 
 
-LBA 16-23: Data block bitmap (to be confirmed)
-LBA 24-31: inode bitmap (to be confirmed)
+LBA 16-23: Data block bitmap (Starting from Block 2)
+LBA 24-31: inode bitmap (Starting from Block 3)
 LBA 32-39: inode table (Starting from Block 4)
 LBA 40-: data blocks (Starting from Block 5)
 

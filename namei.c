@@ -296,7 +296,7 @@ static int ext2_unlink(struct inode * dir, struct dentry *dentry)
 	struct ext2_dir_entry_2 * de;
 	struct page * page;
 	int err;
-
+        pr_debug("ext2_unlink --- dir inode %d, dentry inode %d.\n", dir->i_ino, inode->i_ino);
 	err = dquot_initialize(dir);
 	if (err)
 		goto out;
@@ -323,7 +323,7 @@ static int ext2_rmdir (struct inode * dir, struct dentry *dentry)
 	struct inode * inode = d_inode(dentry);
 	int err = -ENOTEMPTY;
 
-        pr_debug("ext2_rmdir is called.\n");	
+        pr_debug("ext2_rmdir is called from inode %d (parent directory).\n", dir->i_ino);	
 	if (ext2_empty_dir(inode)) {
 		err = ext2_unlink(dir, dentry);
 		if (!err) {

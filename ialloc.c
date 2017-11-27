@@ -113,7 +113,7 @@ void ext2_free_inode (struct inode * inode)
 	unsigned long bit;
 	struct ext2_super_block * es;
 
-        pr_debug("ext2_free_inode is called.\n");	
+        pr_debug("ext2_free_inode is called for inode %d.\n", inode->i_ino);	
 	ino = inode->i_ino;
 	ext2_debug ("freeing inode %lu\n", ino);
 

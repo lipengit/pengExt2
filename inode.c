@@ -73,7 +73,7 @@ void ext2_evict_inode(struct inode * inode)
 	struct ext2_block_alloc_info *rsv;
 	int want_delete = 0;
 
-        pr_debug("ext2_evict_inode is called.");
+        pr_debug("ext2_evict_inode is called for inode %d.\n", inode->i_ino);
 	if (!inode->i_nlink && !is_bad_inode(inode)) {
 		want_delete = 1;
 		dquot_initialize(inode);
@@ -1374,7 +1374,7 @@ static struct ext2_inode *ext2_get_inode(struct super_block *sb, ino_t ino,
         //pr_debug("ext2_get_inode --- free block count of this group %d.\n", le32_to_cpu(gdp->bg_free_blocks_count));
         //pr_debug("ext2_get_inode --- free inode count of this group %d.\n", le32_to_cpu(gdp->bg_free_inodes_count));
         //pr_debug("ext2_get_inode --- ext2 block size bits %d.\n", EXT2_BLOCK_SIZE_BITS(sb));
-        //pr_debug("ext2_get_inode --- block %d, offset %d.\n", block, offset);
+        pr_debug("ext2_get_inode --- block %d, offset %d.\n", block, offset);
         
 	if (!(bh = sb_bread(sb, block)))
 		goto Eio;
@@ -1444,7 +1444,7 @@ struct inode *ext2_iget (struct super_block *sb, unsigned long ino)
 	int n;
 	uid_t i_uid;
 	gid_t i_gid;
-        pr_debug("ext2_iget is called for inode %d.\n", ino);
+        //pr_debug("ext2_iget is called for inode %d.\n", ino);
 	inode = iget_locked(sb, ino); // This function is possibly calling alloc_inode (ext2_alloc_inode). 
 	if (!inode)
 		return ERR_PTR(-ENOMEM);
