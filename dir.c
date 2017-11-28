@@ -199,7 +199,7 @@ fail:
 static struct page * ext2_get_page(struct inode *dir, unsigned long n,
 				   int quiet)
 {
-        //pr_debug("ext2_get_page is called, n is %d.\n", n);
+        pr_debug("ext2_get_page is called for inode %d.\n", dir->i_ino);
 	struct address_space *mapping = dir->i_mapping;
 	struct page *page = read_mapping_page(mapping, n, NULL);
 	if (!IS_ERR(page)) {
@@ -415,8 +415,10 @@ struct ext2_dir_entry_2 *ext2_find_entry (struct inode *dir,
 					ext2_put_page(page);
 					goto out;
 				}
-				if (ext2_match (namelen, name, de))
+				if (ext2_match (namelen, name, de)) {
+                                        //pr_debug("ext2_match found a match for %s.\n", name);
 					goto found;
+                                }
 				de = ext2_next_entry(de);
 			}
 			ext2_put_page(page);
@@ -445,6 +447,7 @@ found:
 
 struct ext2_dir_entry_2 * ext2_dotdot (struct inode *dir, struct page **p)
 {
+        //pr_debug("ext2_dotdot function is called.\n");
 	struct page *page = ext2_get_page(dir, 0, 0);
 	ext2_dirent *de = NULL;
 
@@ -503,7 +506,7 @@ void ext2_set_link(struct inode *dir, struct ext2_dir_entry_2 *de,
  */
 int ext2_add_link (struct dentry *dentry, struct inode *inode)
 {
-        pr_debug("ext2_add_link is called.\n");
+        pr_debug("ext2_add_link is called for inode %d.\n", inode->i_ino);
 	struct inode *dir = d_inode(dentry->d_parent);
 	const char *name = dentry->d_name.name;
 	int namelen = dentry->d_name.len;

@@ -341,13 +341,14 @@ static int ext2_rename (struct inode * old_dir, struct dentry * old_dentry,
 {
 	struct inode * old_inode = d_inode(old_dentry);
 	struct inode * new_inode = d_inode(new_dentry);
+        
+        pr_debug("ext2_rename --- old dir inode %d, new dir inode %d.\n", old_dir->i_ino, new_dir->i_ino);
 	struct page * dir_page = NULL;
 	struct ext2_dir_entry_2 * dir_de = NULL;
 	struct page * old_page;
 	struct ext2_dir_entry_2 * old_de;
 	int err;
 
-        pr_debug("ext2_rename is called.\n");	
 	if (flags & ~RENAME_NOREPLACE)
 		return -EINVAL;
 
@@ -368,11 +369,13 @@ static int ext2_rename (struct inode * old_dir, struct dentry * old_dentry,
 	if (S_ISDIR(old_inode->i_mode)) {
 		err = -EIO;
 		dir_de = ext2_dotdot(old_inode, &dir_page);
+                //pr_debug("ext2_dotdot function returned dentry inode %d.\n", dir_de->inode);
 		if (!dir_de)
 			goto out_old;
 	}
 
 	if (new_inode) {
+            pr_debug("ext2_rename --- we meet the if condition for new indoe.\n");
 		struct page *new_page;
 		struct ext2_dir_entry_2 *new_de;
 
@@ -390,6 +393,7 @@ static int ext2_rename (struct inode * old_dir, struct dentry * old_dentry,
 			drop_nlink(new_inode);
 		inode_dec_link_count(new_inode);
 	} else {
+            pr_debug("ext2_rename --- we meet the else condition for new indoe.\n");
 		err = ext2_add_link(new_dentry, old_inode);
 		if (err)
 			goto out_dir;
