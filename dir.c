@@ -506,12 +506,12 @@ void ext2_set_link(struct inode *dir, struct ext2_dir_entry_2 *de,
  */
 int ext2_add_link (struct dentry *dentry, struct inode *inode)
 {
-        pr_debug("ext2_add_link is called for inode %d.\n", inode->i_ino);
 	struct inode *dir = d_inode(dentry->d_parent);
 	const char *name = dentry->d_name.name;
 	int namelen = dentry->d_name.len;
 	unsigned chunk_size = ext2_chunk_size(dir);
 	unsigned reclen = EXT2_DIR_REC_LEN(namelen);
+        pr_debug("ext2_add_link is called for inode %d, for dentry %s.\n", inode->i_ino, name);
 	unsigned short rec_len, name_len;
 	struct page *page = NULL;
 	ext2_dirent * de;
@@ -607,12 +607,13 @@ out_unlock:
 int ext2_delete_entry (struct ext2_dir_entry_2 * dir, struct page * page )
 {
 	struct inode *inode = page->mapping->host;
-        pr_debug("ext2_delete_entry is called for inode %d.\n", dir->inode);
+        pr_debug("ext2_delete_entry is called for deleting dentry (inode %d) from inode %d.\n", dir->inode, inode->i_ino);
 	char *kaddr = page_address(page);
 	unsigned from = ((char*)dir - kaddr) & ~(ext2_chunk_size(inode)-1);
 	unsigned to = ((char *)dir - kaddr) +
 				ext2_rec_len_from_disk(dir->rec_len);
-	loff_t pos;
+	pr_debug("ext2_delete_entry from %d to %d.\n", from, to);
+        loff_t pos;
 	ext2_dirent * pde = NULL;
 	ext2_dirent * de = (ext2_dirent *) (kaddr + from);
 	int err;
@@ -630,6 +631,7 @@ int ext2_delete_entry (struct ext2_dir_entry_2 * dir, struct page * page )
 	if (pde)
 		from = (char*)pde - (char*)page_address(page);
 	pos = page_offset(page) + from;
+        pr_debug("ext2_delete_entry new position from %d.\n", from);
 	lock_page(page);
 	err = ext2_prepare_chunk(page, pos, to - from);
 	BUG_ON(err);
