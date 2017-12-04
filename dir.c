@@ -287,11 +287,10 @@ static inline void ext2_set_de_type(ext2_dirent *de, struct inode *inode)
 static int
 ext2_readdir(struct file *file, struct dir_context *ctx)
 {
-        pr_debug("ext2_readdir is called, position %d.\n", (unsigned int)ctx->pos);		
         loff_t pos = ctx->pos;
         //pr_debug("ext2_readdir pos %d.\n", (uint32_t) pos);		
 	struct inode *inode = file_inode(file);
-        //pr_debug("ext2_readdir inode number %d, size %d.\n", inode->i_ino, (uint32_t) inode->i_size);		
+        pr_debug("ext2_readdir inode number %d, position %d.\n", inode->i_ino, (unsigned int)ctx->pos);
 	struct super_block *sb = inode->i_sb;
 	unsigned int offset = pos & ~PAGE_MASK;
         //pr_debug("ext2_readdir offset %d.\n", offset);		
@@ -343,7 +342,7 @@ ext2_readdir(struct file *file, struct dir_context *ctx)
 			}
                         
 			if (de->inode) {
-                                //pr_debug("ext2_dirent current inode %d, file type %d, name length %d, rec length %d, name %s.\n", de->inode, de->file_type, de->name_len, de->rec_len, de->name);
+                                pr_debug("ext2_dirent current inode %d, file type %d, name length %d, rec length %d, name %s.\n", de->inode, de->file_type, de->name_len, de->rec_len, de->name);
 				unsigned char d_type = DT_UNKNOWN;
 
 				if (types && de->file_type < EXT2_FT_MAX)
@@ -401,6 +400,7 @@ struct ext2_dir_entry_2 *ext2_find_entry (struct inode *dir,
 	if (start >= npages)
 		start = 0;
 	n = start;
+        pr_debug("ext2_find_entry is called for dir inode %d, name %s.\n", dir->i_ino, name);
 	do {
 		char *kaddr;
 		page = ext2_get_page(dir, n, dir_has_error);
@@ -447,7 +447,7 @@ found:
 
 struct ext2_dir_entry_2 * ext2_dotdot (struct inode *dir, struct page **p)
 {
-        //pr_debug("ext2_dotdot function is called.\n");
+        pr_debug("ext2_dotdot function is called.\n");
 	struct page *page = ext2_get_page(dir, 0, 0);
 	ext2_dirent *de = NULL;
 
@@ -463,12 +463,15 @@ ino_t ext2_inode_by_name(struct inode *dir, const struct qstr *child)
 	ino_t res = 0;
 	struct ext2_dir_entry_2 *de;
 	struct page *page;
-	
+	pr_debug("ext2_inode_by_name is called for dir inode %d for name %s.\n", dir->i_ino, child->name);
 	de = ext2_find_entry (dir, child, &page);
 	if (de) {
 		res = le32_to_cpu(de->inode);
 		ext2_put_page(page);
 	}
+        else {
+            pr_debug("ext2_inode_by_name --- child is not found.\n");
+        }
 	return res;
 }
 
@@ -698,7 +701,7 @@ int ext2_empty_dir (struct inode * inode)
 	struct page *page = NULL;
 	unsigned long i, npages = dir_pages(inode);
 	int dir_has_error = 0;
-
+        pr_debug("ext2_empty_dir is called for inode %d.", inode->i_ino);
 	for (i = 0; i < npages; i++) {
 		char *kaddr;
 		ext2_dirent * de;
