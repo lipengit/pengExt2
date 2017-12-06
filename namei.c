@@ -38,8 +38,8 @@
 
 static inline int ext2_add_nondir(struct dentry *dentry, struct inode *inode)
 {
+        pr_debug("ext2_add_nondir is called for dentry %s and inode %d.\n", dentry->d_name.name, inode->i_ino);	
 	int err = ext2_add_link(dentry, inode);
-        pr_debug("ext2_add_nondir is called.\n");	
 	if (!err) {
 		unlock_new_inode(inode);
 		d_instantiate(dentry, inode);
@@ -102,12 +102,13 @@ static int ext2_create (struct inode * dir, struct dentry * dentry, umode_t mode
 	struct inode *inode;
 	int err;
 
-        pr_debug("ext2_create is called.\n");	
+        pr_debug("ext2_create is called for dir inode %d.\n", dir->i_ino);
 	err = dquot_initialize(dir);
 	if (err)
 		return err;
 
 	inode = ext2_new_inode(dir, mode, &dentry->d_name);
+        pr_debug("ext2_create --- allocated a new inode %d for dentry name %s.\n", inode->i_ino, dentry->d_name.name);
 	if (IS_ERR(inode))
 		return PTR_ERR(inode);
 

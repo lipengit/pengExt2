@@ -53,7 +53,7 @@ read_inode_bitmap(struct super_block * sb, unsigned long block_group)
 	if (!desc)
 		goto error_out;
 
-        pr_debug("read_inode_bitmap from block %d.\n", le32_to_cpu(desc->bg_inode_bitmap));
+        //pr_debug("read_inode_bitmap from block %d.\n", le32_to_cpu(desc->bg_inode_bitmap));
 	bh = sb_bread(sb, le32_to_cpu(desc->bg_inode_bitmap));
 	if (!bh)
 		ext2_error(sb, "read_inode_bitmap",
@@ -174,7 +174,6 @@ static void ext2_preread_inode(struct inode *inode)
 	struct ext2_group_desc * gdp;
 	struct backing_dev_info *bdi;
 
-        pr_debug("ext2_preread_inode is called.\n");	
 	bdi = inode_to_bdi(inode);
 	if (bdi_read_congested(bdi))
 		return;
@@ -194,6 +193,7 @@ static void ext2_preread_inode(struct inode *inode)
 	block = le32_to_cpu(gdp->bg_inode_table) +
 				(offset >> EXT2_BLOCK_SIZE_BITS(inode->i_sb));
 	sb_breadahead(inode->i_sb, block);
+        pr_debug("ext2_preread_inode is called for inode %d, block %d.\n", inode->i_ino, block);	
 }
 
 /*
@@ -381,7 +381,7 @@ static int find_group_other(struct super_block *sb, struct inode *parent)
 	struct ext2_group_desc *desc;
 	int group, i;
 
-        pr_debug("find_group_other is called.\n");	
+        // pr_debug("find_group_other is called.\n");	
 	/*
 	 * Try to place the inode in its parent directory
 	 */

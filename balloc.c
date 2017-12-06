@@ -451,6 +451,7 @@ void ext2_init_block_alloc_info(struct inode *inode)
  */
 void ext2_discard_reservation(struct inode *inode)
 {
+        pr_debug("ext2_discard_reservation is called for inode %d.\n", inode->i_ino);
 	struct ext2_inode_info *ei = EXT2_I(inode);
 	struct ext2_block_alloc_info *block_i = ei->i_block_alloc_info;
 	struct ext2_reserve_window_node *rsv;
