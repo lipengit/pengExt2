@@ -1116,7 +1116,7 @@ static inline void ext2_free_data(struct inode *inode, __le32 *p, __le32 *q)
 {
 	unsigned long block_to_free = 0, count = 0;
 	unsigned long nr;
-
+        pr_debug("ext2_free_data is called for inode %d.\n", inode->i_ino);
 	for ( ; p < q ; p++) {
 		nr = le32_to_cpu(*p);
 		if (nr) {
