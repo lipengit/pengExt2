@@ -638,7 +638,7 @@ static int ext2_get_blocks(struct inode *inode,
 	int count = 0;
 	ext2_fsblk_t first_block = 0;
 
-        //pr_debug("ext2_get_blocks is called.\n");
+        //pr_debug("ext2_get_blocks is called for inode %d, iblock %d, maxblocks %d.\n", inode->i_ino, iblock, maxblocks);
 	BUG_ON(maxblocks == 0);
 
 	depth = ext2_block_to_path(inode,iblock,offsets,&blocks_to_boundary);
@@ -781,7 +781,7 @@ cleanup:
 int ext2_get_block(struct inode *inode, sector_t iblock,
 		struct buffer_head *bh_result, int create)
 {
-        //pr_debug("ext2_get_block is called for inode %d, block %d.\n", inode->i_ino, iblock);	
+        pr_debug("ext2_get_block is called for inode %d, block %d.\n", inode->i_ino, iblock);	
 	unsigned max_blocks = bh_result->b_size >> inode->i_blkbits;
 	bool new = false, boundary = false;
 	u32 bno;
@@ -792,7 +792,7 @@ int ext2_get_block(struct inode *inode, sector_t iblock,
 	if (ret <= 0)
 		return ret;
         
-        pr_debug("ext2_get_blocks allocated block %d for inode %d.\n", bno, inode->i_ino);	
+        //pr_debug("ext2_get_blocks allocated block %d for inode %d.\n", bno, inode->i_ino);	
 	map_bh(bh_result, inode->i_sb, bno);
 	bh_result->b_size = (ret << inode->i_blkbits);
 	if (new)
@@ -894,7 +894,7 @@ ext2_write_begin(struct file *file, struct address_space *mapping,
 		loff_t pos, unsigned len, unsigned flags,
 		struct page **pagep, void **fsdata)
 {
-        pr_debug("ext2_write_begin is called.\n");	
+        pr_debug("ext2_write_begin is called, pos %d, len %d.\n", (unsigned int)pos, len);	
 	int ret;
 
 	ret = block_write_begin(mapping, pos, len, flags, pagep,
