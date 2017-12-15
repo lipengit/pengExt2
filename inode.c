@@ -781,12 +781,13 @@ cleanup:
 int ext2_get_block(struct inode *inode, sector_t iblock,
 		struct buffer_head *bh_result, int create)
 {
-        pr_debug("ext2_get_block is called for inode %d, block %d.\n", inode->i_ino, iblock);	
 	unsigned max_blocks = bh_result->b_size >> inode->i_blkbits;
 	bool new = false, boundary = false;
 	u32 bno;
 	int ret;
-
+        
+        pr_debug("ext2_get_block is called for inode %d, block %d, max blocks %d, create %d, buffer head block size %d, inode block bits %d.\n", inode->i_ino, iblock, max_blocks, create, bh_result->b_size, inode->i_blkbits);
+        
 	ret = ext2_get_blocks(inode, iblock, max_blocks, &bno, &new, &boundary,
 			create);
 	if (ret <= 0)
