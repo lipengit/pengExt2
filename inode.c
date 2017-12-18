@@ -170,7 +170,8 @@ static int ext2_block_to_path(struct inode *inode,
 		double_blocks = (1 << (ptrs_bits * 2));
 	int n = 0;
 	int final = 0;
-
+        
+        pr_debug("ext2_block_to_path --- ptrs %d, ptrs_bits %d, direct_blocks %d, indirect_blocks %d, double_blocks %d\n", ptrs, ptrs_bits, direct_blocks, indirect_blocks, double_blocks);
 	if (i_block < 0) {
 		ext2_msg(inode->i_sb, KERN_WARNING,
 			"warning: %s: block < 0", __func__);
