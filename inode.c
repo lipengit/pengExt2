@@ -244,9 +244,12 @@ static Indirect *ext2_get_branch(struct inode *inode,
 
 	*err = 0;
 	/* i_data is not going away, no lock needed */
+        //pr_debug("ext2_get_branch offsets %d.\n", *offsets);
 	add_chain (chain, NULL, EXT2_I(inode)->i_data + *offsets);
-	if (!p->key)
+	if (!p->key) {
+                //pr_debug("ext2_get_branch p key is %d, chain[0] key is %d, going to no_block branch.\n", p->key, chain[0].key);
 		goto no_block;
+        }
 	while (--depth) {
 		bh = sb_bread(sb, le32_to_cpu(p->key));
 		if (!bh)
@@ -259,6 +262,7 @@ static Indirect *ext2_get_branch(struct inode *inode,
 		if (!p->key)
 			goto no_block;
 	}
+        pr_debug("ext2_get_branch is going to return NULL.\n");
 	return NULL;
 
 changed:
@@ -651,6 +655,7 @@ static int ext2_get_blocks(struct inode *inode,
 	partial = ext2_get_branch(inode, depth, offsets, chain, &err);
 	/* Simplest case - block found, no allocation needed */
 	if (!partial) {
+                pr_debug("ext2_get_blocks: partial is false.\n");
 		first_block = le32_to_cpu(chain[depth - 1].key);
 		count++;
 		/*map more blocks*/
@@ -677,7 +682,7 @@ static int ext2_get_blocks(struct inode *inode,
 		if (err != -EAGAIN)
 			goto got_it;
 	}
-
+        //pr_debug("ext2_get_blocks: partial is ture and its key is %d.\n", partial->key);
 	/* Next simple case - plain lookup or failed read of indirect block */
 	if (!create || err == -EIO)
 		goto cleanup;
@@ -714,8 +719,10 @@ static int ext2_get_blocks(struct inode *inode,
 	 * Okay, we need to do block allocation.  Lazily initialize the block
 	 * allocation info here if necessary
 	*/
-	if (S_ISREG(inode->i_mode) && (!ei->i_block_alloc_info))
+	if (S_ISREG(inode->i_mode) && (!ei->i_block_alloc_info)) {
+                pr_debug("ext2_get_blocks --- start block allocation init.\n");
 		ext2_init_block_alloc_info(inode);
+        }
 
 	goal = ext2_find_goal(inode, iblock, partial);
 
