@@ -655,7 +655,7 @@ static int ext2_get_blocks(struct inode *inode,
 	partial = ext2_get_branch(inode, depth, offsets, chain, &err);
 	/* Simplest case - block found, no allocation needed */
 	if (!partial) {
-                pr_debug("ext2_get_blocks: partial is false.\n");
+                pr_debug("ext2_get_blocks: partial is false, block found, no allocation needed.\n");
 		first_block = le32_to_cpu(chain[depth - 1].key);
 		count++;
 		/*map more blocks*/
