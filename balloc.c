@@ -1305,16 +1305,21 @@ retry_alloc:
 		goto io_error;
 
 	free_blocks = le16_to_cpu(gdp->bg_free_blocks_count);
+        pr_debug("ext2_new_blocks --- goal %d, goal_group %d, free_blocks %d.\n", (int)goal, group_no, free_blocks);
 	/*
 	 * if there is not enough free blocks to make a new resevation
 	 * turn off reservation for this allocation
 	 */
 	if (my_rsv && (free_blocks < windowsz)
 		&& (free_blocks > 0)
-		&& (rsv_is_empty(&my_rsv->rsv_window)))
-		my_rsv = NULL;
+		&& (rsv_is_empty(&my_rsv->rsv_window))) {
+            	my_rsv = NULL;
+                pr_debug("ext2_new_blocks --- turn off reservation for this allocation.\n");
+        }
+	
 
 	if (free_blocks > 0) {
+                pr_debug("ext2_new_blocks --- first data block %d.\n", le32_to_cpu(es->s_first_data_block));
 		grp_target_blk = ((goal - le32_to_cpu(es->s_first_data_block)) %
 				EXT2_BLOCKS_PER_GROUP(sb));
 		bitmap_bh = read_block_bitmap(sb, group_no);
@@ -1323,6 +1328,7 @@ retry_alloc:
 		grp_alloc_blk = ext2_try_to_allocate_with_rsv(sb, group_no,
 					bitmap_bh, grp_target_blk,
 					my_rsv, &num);
+                pr_debug("ext2_new_blocks --- running ext2_try_to_allocate_with_rsv, grp_alloc_blk %d.\n", grp_alloc_blk);
 		if (grp_alloc_blk >= 0)
 			goto allocated;
 	}

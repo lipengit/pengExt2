@@ -492,6 +492,7 @@ static int ext2_alloc_branch(struct inode *inode,
 	ext2_fsblk_t new_blocks[4];
 	ext2_fsblk_t current_block;
 
+        pr_debug("ext2_alloc_branch --- goal is %d, indirect_blks %d, blks %d.\n", (int)goal, indirect_blks, *blks);
 	num = ext2_alloc_blocks(inode, goal, indirect_blks,
 				*blks, new_blocks, &err);
 	if (err)
