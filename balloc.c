@@ -722,6 +722,7 @@ repeat:
 		 * The block was allocated by another thread, or it was
 		 * allocated and then freed by another thread
 		 */
+            pr_debug("ext2_try_to_allocate --- I'm in the repeat loop when chekcing ext2_set_bit_atomic.\n");
 		start++;
 		grp_goal++;
 		if (start >= end)
@@ -1319,9 +1320,9 @@ retry_alloc:
 	
 
 	if (free_blocks > 0) {
-                pr_debug("ext2_new_blocks --- first data block %d.\n", le32_to_cpu(es->s_first_data_block));
 		grp_target_blk = ((goal - le32_to_cpu(es->s_first_data_block)) %
 				EXT2_BLOCKS_PER_GROUP(sb));
+                pr_debug("ext2_new_blocks --- first data block %d, grp_target_blk %d.\n", le32_to_cpu(es->s_first_data_block), grp_target_blk);
 		bitmap_bh = read_block_bitmap(sb, group_no);
 		if (!bitmap_bh)
 			goto io_error;
