@@ -729,11 +729,13 @@ repeat:
 			goto fail_access;
 		goto repeat;
 	}
+        pr_debug("ext2_try_to_allocate --- right before the while loop.\n");
 	num++;
 	grp_goal++;
 	while (num < *count && grp_goal < end
 		&& !ext2_set_bit_atomic(sb_bgl_lock(EXT2_SB(sb), group),
 					grp_goal, bitmap_bh->b_data)) {
+            pr_debug("ext2_try_to_allocate --- we are inside the while loop.\n");
 		num++;
 		grp_goal++;
 	}
@@ -1047,6 +1049,8 @@ static void try_to_extend_reservation(struct ext2_reserve_window_node *my_rsv,
 	struct ext2_reserve_window_node *next_rsv;
 	struct rb_node *next;
 	spinlock_t *rsv_lock = &EXT2_SB(sb)->s_rsv_window_lock;
+        
+        pr_debug("try_to_extend_reservation --- we are here.\n");
 
 	if (!spin_trylock(rsv_lock))
 		return;
@@ -1140,10 +1144,12 @@ ext2_try_to_allocate_with_rsv(struct super_block *sb, unsigned int group,
 		if (rsv_is_empty(&my_rsv->rsv_window) || (ret < 0) ||
 			!goal_in_my_reservation(&my_rsv->rsv_window,
 						grp_goal, group, sb)) {
+                        //pr_debug("ext2_try_to_allocate_with_rsv --- while 1, case 1.\n");
 			if (my_rsv->rsv_goal_size < *count)
 				my_rsv->rsv_goal_size = *count;
 			ret = alloc_new_reservation(my_rsv, grp_goal, sb,
 							group, bitmap_bh);
+                        pr_debug("ext2_try_to_allocate_with_rsv --- new reservation allocated start %d end %d.\n", (int) my_rsv->rsv_window._rsv_start, (int) my_rsv->rsv_window._rsv_end);
 			if (ret < 0)
 				break;			/* failed */
 
@@ -1151,6 +1157,7 @@ ext2_try_to_allocate_with_rsv(struct super_block *sb, unsigned int group,
 							grp_goal, group, sb))
 				grp_goal = -1;
 		} else if (grp_goal >= 0) {
+                    pr_debug("ext2_try_to_allocate_with_rsv --- while 1, case 2.\n");
 			int curr = my_rsv->rsv_end -
 					(grp_goal + group_first_block) + 1;
 
@@ -1161,6 +1168,7 @@ ext2_try_to_allocate_with_rsv(struct super_block *sb, unsigned int group,
 
 		if ((my_rsv->rsv_start > group_last_block) ||
 				(my_rsv->rsv_end < group_first_block)) {
+                    pr_debug("ext2_try_to_allocate_with_rsv --- while 1, case 3.\n");
 			rsv_window_dump(&EXT2_SB(sb)->s_rsv_window_root, 1);
 			BUG();
 		}
